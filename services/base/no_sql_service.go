@@ -3,14 +3,15 @@ package base
 import (
 	"context"
 	domainBase "github.com/novabankapp/common.data/domain/base"
-	baseRepository "github.com/novabankapp/common.data/repositories/base/cassandra"
+	"github.com/novabankapp/common.data/repositories/base"
 )
 
 type NoSqlService[E domainBase.NoSqlEntity] struct {
-	repo baseRepository.CassandraRepository[E]
+	repo base.NoSqlRepository[E]
 }
 
-func NewDocumentDatabaseService[E domainBase.NoSqlEntity](repo baseRepository.CassandraRepository[E]) NoSqlService[E] {
+func NewDocumentDatabaseService[E domainBase.NoSqlEntity](repo base.NoSqlRepository[E]) NoSqlService[E] {
+
 	return NoSqlService[E]{
 		repo: repo,
 	}
@@ -30,7 +31,7 @@ func (s *NoSqlService[E]) Delete(ctx context.Context, id string) (bool, error) {
 	return s.repo.Delete(ctx, id)
 }
 func (s *NoSqlService[E]) Get(ctx context.Context,
-	page []byte, pageSize int, queries []map[string]string, orderBy string) (*[]E, error) {
+	page []byte, pageSize int, queries []map[string]string, orderBy string) (*[]E, []byte, error) {
 	return s.repo.Get(ctx, page, pageSize, queries, orderBy)
 
 }
